@@ -8,19 +8,19 @@
 </p>
 
 ## Konfigurasi
+<br><br>
+Database MySQL<br>
+DB      : informatika<br>
+Host    : 127.0.0.1<br>
+User    : root<br>
+Pass    : <br>
+Port    : 3306<br>
+<br><br>
+Struktur tabel?<br>
+-> php artisan migrate<br><br>
 
-Database MySQL
-DB      : informatika
-Host    : 127.0.0.1
-User    : root
-Pass    :
-Port    : 3306
-
-Struktur tabel?
--> php artisan migrate
-
-Jangan lupa follow IG: alvinbintang
+Jangan lupa follow IG: alvinbintang<br><br>
 
 ## License
-
+<br>
 The Laravel framework is open-source software licensed under the [MIT license](https://opensource.org/licenses/MIT).
