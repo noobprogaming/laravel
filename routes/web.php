@@ -25,3 +25,5 @@ Route::put('mhs/edit/update/{id}','MhsController@update');
 
 Auth::routes();
 Route::get('/home', 'HomeController@index')->name('home');
+
+Route::get('logout','LoginController@logout');

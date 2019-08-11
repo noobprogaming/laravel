@@ -20,7 +20,6 @@
                     </form>
                     
                     <a href="mhs/tambah">Tambah</a>
-                    
                     <table class="table">
                         <tr>
                             <th>ID</th>

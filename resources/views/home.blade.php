@@ -16,7 +16,17 @@
 
                     You are logged in!
                     <br><br>
+                    
+                    <hr>
+                    {{ Auth::user()->id }}
+                    <hr>
+                    {{ Auth::user()->name }}
+                    <hr>
+                    {{ Auth::user()->email }}
+                    <hr>
+                    
                     <a href="mhs">CRUD + Search</a>
+                
                 </div>
             </div>
         </div>
