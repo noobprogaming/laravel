@@ -14,11 +14,13 @@
                         </div>
                     @endif
 
-                    <form action="mhs/cari" method="get">
-                        <input type="search" name="q">
-                        <input type="submit" value="Cari">
+                    <form action="mhs/cari" method="get" class="form-inline">
+                        <input type="search" name="q" class="form-control form-control-sm">
+                        <input type="submit" value="Cari" class="btn btn-sm btn-primary">
                     </form>
+                    
                     <a href="mhs/tambah">Tambah</a>
+                    
                     <table class="table">
                         <tr>
                             <th>ID</th>

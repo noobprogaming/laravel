@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 
 use App\Informatika;
 
+use Hash;
+
 class MhsController extends Controller
 {
     public function __construct()
@@ -26,17 +28,17 @@ class MhsController extends Controller
     public function store(Request $request) {
 
         $this->validate($request, [
-            'id' => 'required',
-            'name' => 'required',
-            'email' => 'required',
-            'password' => 'required'
+            'id' => ['required', 'string', 'max:10', 'unique:users'],
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'password' => ['required', 'string', 'min:8', 'confirmed'],
         ]);
 
         Informatika::create([
-            'id' => $request->id,
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => $request->password
+            'id' => $request['id'],
+            'name' => $request['name'],
+            'email' => $request['email'],
+            'password' => Hash::make($request['password']),
         ]);
 
         return redirect('mhs');
@@ -49,15 +51,15 @@ class MhsController extends Controller
 
     public function update($id, Request $request) {
         $this->validate($request, [
-            'name' => 'required',
-            'email' => 'required',
-            'password' => 'required'
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'email', 'max:255'],
+            'password' => ['required', 'string', 'min:8', 'confirmed'],
         ]);
 
         $mhs = Informatika::find($id);
         $mhs->name = $request->name;
         $mhs->email = $request->email;
-        $mhs->password = $request->password;
+        $mhs->password = Hash::make($request->password);
         $mhs->save();
             
         return redirect('mhs');
@@ -71,7 +73,9 @@ class MhsController extends Controller
 
     public function cari(Request $request) {
         $mhs = Informatika::when($request->q, function($query) use ($request) {
-            $query->where('name', 'LIKE', "%$request->q%");
+            $query->where('id', 'LIKE', "%$request->q%")
+                    ->orWhere('name', 'LIKE', "%$request->q%")
+                    ->orWhere('email', 'LIKE', "%$request->q%");
         })->paginate();
         return view('mahasiswa', ['mhs' => $mhs]);
     }
