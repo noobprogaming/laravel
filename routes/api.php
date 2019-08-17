@@ -16,3 +16,7 @@ use Illuminate\Http\Request;
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+Route::get('/json/home','JSONController@home');
+Route::get('/json/profile','JSONController@profile');
+Route::get('/json/message','JSONController@message');

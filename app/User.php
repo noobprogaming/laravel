@@ -12,11 +12,22 @@ class User extends Authenticatable
 
     public $incrementing = false;
 
+    public function content() {
+        return $this->hasMany('App\Content');
+    }
+    public function message() {
+        return $this->hasMany('App\Message');
+    }
+    public function friend() {
+        return $this->hasMany('App\Friend');
+    }
+
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
+    protected $table = "users";
     protected $fillable = [
         'id', 'name', 'email', 'password',
     ];

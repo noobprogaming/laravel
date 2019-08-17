@@ -4,21 +4,23 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-use App\Informatika;
+use App\User;
 
 use Hash;
 
 class MhsController extends Controller
 {
+    /*
     public function __construct()
     {
         $this->middleware('auth');
     }
-    
+    */
+
     public function index () {
-        //$mhs = Informatika::all();
-        $mhs = Informatika::paginate(5);
-        return view('mahasiswa', ['mhs' => $mhs]);
+        //$mhs = User::all();
+        $mhs = User::paginate(5);
+        return view('mahasiswa')->with('mhs', $mhs); 
     }
 
     public function tambah() {
@@ -34,7 +36,7 @@ class MhsController extends Controller
             'password' => ['required', 'string', 'min:8', 'confirmed'],
         ]);
 
-        Informatika::create([
+        User::create([
             'id' => $request['id'],
             'name' => $request['name'],
             'email' => $request['email'],
@@ -45,7 +47,7 @@ class MhsController extends Controller
     }
 
     public function edit($id) {
-        $mhs = Informatika::find($id);
+        $mhs = User::find($id);
         return view('edit', ['mhs' => $mhs]);
     }
 
@@ -56,7 +58,7 @@ class MhsController extends Controller
             'password' => ['required', 'string', 'min:8', 'confirmed'],
         ]);
 
-        $mhs = Informatika::find($id);
+        $mhs = User::find($id);
         $mhs->name = $request->name;
         $mhs->email = $request->email;
         $mhs->password = Hash::make($request->password);
@@ -66,13 +68,13 @@ class MhsController extends Controller
     }
 
     public function delete($id) {        
-        $mhs = Informatika::find($id);
+        $mhs = User::find($id);
         $mhs->delete();
         return redirect()->back();
     }
 
     public function cari(Request $request) {
-        $mhs = Informatika::when($request->q, function($query) use ($request) {
+        $mhs = User::when($request->q, function($query) use ($request) {
             $query->where('id', 'LIKE', "%$request->q%")
                     ->orWhere('name', 'LIKE', "%$request->q%")
                     ->orWhere('email', 'LIKE', "%$request->q%");

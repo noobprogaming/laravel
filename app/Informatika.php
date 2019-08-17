@@ -15,4 +15,11 @@ class Informatika extends Model
 
     protected $hidden = ['password'];
 
+    protected $casts = [
+        'id' => 'array',
+        'name' => 'array',
+        'email' => 'array',
+        'password' => 'array',
+    ];
+
 }

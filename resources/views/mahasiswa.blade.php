@@ -30,13 +30,13 @@
                         </tr>
                         @foreach($mhs as $n)
                         <tr>
-                            <td>{{ $n->id }}</td>
-                            <td>{{ $n->name }}</td>
-                            <td>{{ $n->email }}</td>
-                            <!--<td>{{ $n->password }}</td>-->
+                            <td>{{ $n['id'] }}</td>
+                            <td>{{ $n['name'] }}</td>
+                            <td>{{ $n['email'] }}</td>
+                            <!--<td>{{ $n['password'] }}</td>-->
                             <td>
-                                <a href="mhs/edit/{{ $n->id }}">Edit</a>
-                                <a href="mhs/delete/{{ $n->id }}">Delete</a>
+                                <a href="mhs/edit/{{ $n['id'] }}">Edit</a>
+                                <a href="mhs/delete/{{ $n['id'] }}">Delete</a>
                             </td>
                         </tr>
                         @endforeach

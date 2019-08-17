@@ -11,31 +11,126 @@
             @endif
             <div class="col-md-3">
                 <div class="card">
+                    <div class="form-group text-center my-3">
+                        <img src='{{ asset('data_file/'.$user_describe->id.'') }}' class="img-profile">
+                        <div class="uname mt-3">{{ $user_describe->name }}</div>
+                        <hr>
+                        <div class="form-inline">
+                            <div class="col">
+                                <a href="message?q={{ Auth::user()->id }}" data-toggle="modal"
+                                    data-target="#followingModal">
+                                    Following<br>
+                                    {{ $friend_following_c }}
+                                </a>
+                            </div>
+                            <div class="col">
+                                <a href="message?q={{ Auth::user()->id }}" data-toggle="modal"
+                                    data-target="#followersModal">
+                                    Followers<br>
+                                    {{ $friend_followers_c }}
+                                </a>
+                            </div>
+                        </div>
+                    </div>
                     <ul class="list-group list-group-flush">
                         <li class="list-group-item">
                             <a href="profile?q={{ Auth::user()->id }}">
-                                <div class="form-inline my-3">
-                                    <img src="{{ asset('data_file/'.Auth::user()->id.'') }}" class="profile-sm">
-                                    <div class="ml-3 uname">{{ Auth::user()->name }}</div>
-                                </div>
-                            </a>
-                        </li>
-                        <li class="list-group-item">
-                            <a href="home">
-                                <div class="fa fa-home mx-3"></div> Home
+                                <div class="fa fa-address-book mx-3"></div> {{ $user_describe->name }}
                             </a>
                         </li>
                         <li class="list-group-item">
                             <a href="profile?q={{ Auth::user()->id }}">
-                                <div class="fa fa-address-book mx-3"></div> Profile
+                                <div class="fa fa-envelope mx-3"></div> {{ $user_describe->email }}
                             </a>
                         </li>
                         <li class="list-group-item">
-                            <a href="message?q={{ Auth::user()->id }}">
-                                <div class="fa fa-envelope mx-3"></div> Message
+                            <a href="profile?q={{ Auth::user()->id }}">
+                                <div class="fa fa-book mx-3"></div> {{ $user_describe->created_at }}
                             </a>
                         </li>
+                        @if (Auth::user()->id !== $user_describe->id)
+                        <li class="list-group-item text-center">
+                            <a href="message?q={{ $user_describe->id }}">
+                                Send Message
+                            </a>
+                        </li>
+                        @endif
                     </ul>
+
+                    @if (Auth::user()->id !== $user_describe->id)
+                    <div class="card-body">
+                            <a href="#" class="card-link">
+                                <form action="profile/store_follow" method="post" class="mt-3">
+                                    {{ csrf_field() }}
+    
+                                    <input type="hidden" class="form-control @error('id') is-invalid @enderror"
+                                        name="user_id" value="{{ Auth::user()->id }}" required autocomplete="user_id"
+                                        autofocus>
+    
+                                    <input type="hidden" class="form-control @error('friend_id') is-invalid @enderror"
+                                        name="friend_id" value="{{ $user_describe->id }}" required autocomplete="friend_id"
+                                        autofocus>
+    
+                                    <button type="submit" class="btn {{ $btn }}" >
+                                        {{ $follow_c }}
+                                    </button>
+                                </form>
+                            </a>
+                            <br>{{ $follow_me }}
+                        </div>
+                    @endif
+
+                    <div class="modal fade" id="followingModal">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h4 class="modal-title">{{ $user_describe->name }}'s followers</h4>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="mx-3 my-3">
+                                        @foreach ($friend_following as $n)
+                                        <a href="profile?q={{ $n->id }}">
+                                            <div class="form-inline my-2">
+                                                <img src='{{ asset('data_file/'.$n->id.'') }}' class="profile-sm">
+                                                <div class="ml-3 uname">{{ $n->name }}</div>
+                                            </div>
+                                        </a>
+                                        @endforeach
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-sm btn-danger"
+                                        data-dismiss="modal">Close</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal fade" id="followersModal">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h4 class="modal-title">{{ $user_describe->name }}'s followers</h4>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="mx-3 my-3">
+                                        @foreach ($friend_followers as $n)
+                                        <a href="profile?q={{ $n->id }}">
+                                            <div class="form-inline my-2">
+                                                <img src='{{ asset('data_file/'.$n->id.'') }}' class="profile-sm">
+                                                <div class="ml-3 uname">{{ $n->name }}</div>
+                                            </div>
+                                        </a>
+                                        @endforeach
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-sm btn-danger"
+                                        data-dismiss="modal">Close</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
             </div>
             <div class="col-md-6">
@@ -57,9 +152,7 @@
 
                                         <input type="text" class="form-control @error('content') is-invalid @enderror"
                                             name="content" value="{{ old('content') }}" required autocomplete="content"
-                                            autofocus placeholder="What's your mind?">
-
-                                        <input type="file" name="file" class="input-file my-2">
+                                            autofocus placeholder="Send message to {{ $user_describe->name }}">
 
                                         @error('content')
                                         <span class="invalid-feedback" role="alert">
@@ -87,7 +180,7 @@
                     </div>
                 </div>
                 <div id="load">
-                    @foreach($user as $n)
+                    @foreach($user_profile as $n)
                     <div class="card my-4">
                         <div class="row">
                             <table class="w-100 mx-4 my-2">
@@ -180,7 +273,7 @@
                     </div>
                     @endforeach
                 </div>
-                {{ $user->links() }}
+                {{ $user_profile->links() }}
             </div>
             <div class="col-md-3">
                     <div>
@@ -197,27 +290,12 @@
         </div>
     </div>
     
-<script>
-    $(document).ready(function () {
-        setInterval(function () {
-            $("#loading").load('api/json/home');
-        }, 1000);
-        setTimeout(function () {
-            scroll_down();
-        }, 1050);        
-        
-        $('.input-file').hide();
-        $('.show-file').on('click', function () {
-            $('.input-file').slideDown();
+    <script>
+        $(document).ready(function () {
+            setInterval(function () {
+                $("#loading").load('api/json/home');
+            }, 1000);   
         });
-    });
-
-    function scroll_down() {
-        setTimeout(function () {
-            var messageBody = document.querySelector('#conv');
-            messageBody.scrollTop = messageBody.scrollHeight - messageBody.clientHeight;
-        }, 500);
-    };
-</script>
-@endsection
-
+    </script>
+    @endsection
+    
